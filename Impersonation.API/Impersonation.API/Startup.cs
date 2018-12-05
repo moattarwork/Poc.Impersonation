@@ -1,6 +1,4 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -40,49 +38,7 @@ namespace Impersonation.API
         {
             app.UseStuntman(StuntmanOptions);
             app.UseMvc();
-
-            app.Map("", nonSecure =>
-            {
-                nonSecure.Run(context =>
-                {
-                    var userName = context.User?.Identity.Name;
-                    if (string.IsNullOrEmpty(userName))
-                        userName = "Anonymous / Unknown";
-
-                    context.Response.ContentType = "text/html";
-                    context.Response.WriteAsync(
-                        $@"<!DOCTYPE html>
-                            <html>
-                                <head>
-                                    <meta charset=""utf-8"">
-                                    <title>Stuntman - UsageSample.AspNetCore</title>
-                                </head>
-                            <body>Hello, {userName}.");
-
-                    context.Response.WriteAsync(StuntmanOptions.UserPicker(context.User ?? new ClaimsPrincipal()));
-                    context.Response.WriteAsync(@"</body></html>");
-
-                    return Task.FromResult(true);
-                });
-            });
-        }
-
-
-    }
-
-    public static class SecurityExtensions
-    {
-        public static StuntmanOptions AddUser(this StuntmanOptions options, string name, string surname)
-        {
-            var user = new StuntmanUser($"{name}.{surname}", $"{name} {surname}", ClaimTypes.Name, ClaimTypes.Role)
-                .SetAccessToken(Guid.NewGuid().ToString())
-                .AddClaim("given_name", name)
-                .AddClaim("family_name", surname)
-                .AddClaim("role", "MDA")
-                .AddClaim("role", "MPIR");
-
-            options.AddUser(user);
-            return options;
+            app.UseWelcomeApi(StuntmanOptions);
         }
     }
 }
