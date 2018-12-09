@@ -15,7 +15,7 @@ steps:
   
 - script: dotnet pack ./Impersonation.API /p:PackageVersion=$(version)
 
-- task: publishing
+- task: DotNetCoreCLI@2
   inputs:
     command: publish
     publishWebProjects: True
