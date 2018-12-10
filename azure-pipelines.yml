@@ -21,7 +21,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    projects: ./Impersonation.API/Impersonation.API.sln
+    projects: './Impersonation.API/Impersonation.API.sln'
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
